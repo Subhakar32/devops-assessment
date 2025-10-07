@@ -26,8 +26,8 @@ jobs:
         run: |
           docker build \
             --file Dockerfile \
-            --tag ghcr.io/subahara2/devops-assessment:latest \
+            --tag ghcr.io/subahakar32/devops-assessment:latest \
             .
 
       - name: Push Docker image
-        run: docker push ghcr.io/subahara2/devops-assessment:latest
+        run: docker push ghcr.io/subahakar32/devops-assessment:latest
