@@ -16,7 +16,7 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/subhakar32/devops-assessment:latest .
+        run: docker build -t ghcr.io/subahara2/devops-assessment:latest .
 
       - name: Push Docker image
-        run: docker push ghcr.io/subhakar32/devops-assessment:latest
+        run: docker push ghcr.io/subahara2/devops-assessment:latest
