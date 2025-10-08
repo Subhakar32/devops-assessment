@@ -1,40 +1,162 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🐳 DevOps Internship Assessment  
+**Project:** Containerize and Deploy a Next.js Application using Docker, GitHub Actions, and Minikube  
 
-## Getting Started
+---
 
-First, run the development server:
+## 📘 Overview  
+This project demonstrates a complete DevOps pipeline to:  
+- Containerize a **Next.js** application using **Docker**  
+- Automate image builds and pushes using **GitHub Actions** and **GitHub Container Registry (GHCR)**  
+- Deploy the containerized app on **Kubernetes (Minikube)** using declarative manifests  
 
+---
+
+## 🧱 Project Structure  
+├── .github/
+│ └── workflows/
+│ └── docker-build.yml
+├── k8s/
+│ ├── deployment.yaml
+│ └── service.yaml
+├── Dockerfile
+├── package.json
+├── pages/
+│ └── index.js
+├── public/
+├── README.md
+└── next.config.js
+
+---
+
+## ⚙️ Prerequisites  
+Ensure the following are installed locally before starting:  
+- [Node.js (v18+)](https://nodejs.org/)  
+- [Docker](https://www.docker.com/)  
+- [GitHub CLI](https://cli.github.com/)  
+- [Minikube](https://minikube.sigs.k8s.io/docs/start/)  
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)  
+
+---
+
+## 🚀 Setup Instructions  
+
+### 1️⃣ Clone the Repository  
+```bash
+git clone https://github.com/Subhakar32/devops-assessment.git
+cd devops-assessment
+### 2️⃣ Install Dependencies
+```bash
+npm install
+### 3️⃣ Run Locally
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The app will be accessible at 👉 http://localhost:3000
+🐋 Docker Setup
+Build Docker Image
+```bash
+docker build -t subhakar32/nextjs-app:latest .
+Run Docker Container
+```bash
+docker run -p 3000:3000 subhakar32/nextjs-app:latest
+The app will be accessible at 👉 http://localhost:3000
+⚙️ GitHub Actions Workflow
+File: .github/workflows/docker-build.yml
+name: Build and Push Docker Image
+```yaml
+on:
+  push:
+    branches: [ "main" ]
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+      - name: Build and Push Image
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/nextjs-app:latest
+This workflow automatically builds and pushes the Docker image to GHCR whenever code is pushed to the main branch.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+☸️ Kubernetes Deployment (Minikube)
+Start Minikube
+```bash
+minikube start
+Apply Manifests
+```bash
+kubectl apply -f k8s/
+Verify Deployment
+```bash
+kubectl get pods
+kubectl get svc
+Access the Application
+```bash
+minikube service nextjs-service
+🧩 Kubernetes Manifests
+deployment.yaml
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nextjs-app
+  template:
+    metadata:
+      labels:
+        app: nextjs-app
+    spec:
+      containers:
+      - name: nextjs
+        image: ghcr.io/subhakar32/nextjs-app:latest
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+service.yaml
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-service
+spec:
+  type: NodePort
+  selector:
+    app: nextjs-app
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
 
-## Learn More
+📦 Repository & Image URLs
 
-To learn more about Next.js, take a look at the following resources:
+GitHub Repository: https://github.com/Subhakar32/devops-assessment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+GHCR Image URL: ghcr.io/subhakar32/nextjs-app:latest
+🧮 Evaluation Focus
+| Area                 | Description                                          |
+| -------------------- | ---------------------------------------------------- |
+| 🐳 **Docker**        | Multi-stage, optimized image builds                  |
+| ⚙️ **CI/CD**         | GitHub Actions automation with GHCR integration      |
+| ☸️ **Kubernetes**    | Deployment, service configuration, and health checks |
+| 📖 **Documentation** | Clear, reproducible setup and deployment guide       |
