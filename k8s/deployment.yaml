@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nextjs
-        image: ghcr.io/your-username/your-repo:latest
+        image: ghcr.io/subhakar32/devops-assessment:latest
         ports:
         - containerPort: 3000
         readinessProbe:
