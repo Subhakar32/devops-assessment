@@ -40,18 +40,18 @@ Ensure the following are installed locally before starting:
 
 ## 🚀 Setup Instructions  
 
-### 1️⃣ Clone the Repository  
+# 1️⃣ Clone the Repository  
 ```bash
 git clone https://github.com/Subhakar32/devops-assessment.git
 cd devops-assessment
-### 2️⃣ Install Dependencies
+# 2️⃣ Install Dependencies
 ```bash
 npm install
-### 3️⃣ Run Locally
+#3️⃣ Run Locally
 ```bash
 npm run dev
 The app will be accessible at 👉 http://localhost:3000
-🐋 Docker Setup
+# 🐋 Docker Setup
 Build Docker Image
 ```bash
 docker build -t subhakar32/nextjs-app:latest .
@@ -59,7 +59,7 @@ Run Docker Container
 ```bash
 docker run -p 3000:3000 subhakar32/nextjs-app:latest
 The app will be accessible at 👉 http://localhost:3000
-⚙️ GitHub Actions Workflow
+# ⚙️ GitHub Actions Workflow
 File: .github/workflows/docker-build.yml
 name: Build and Push Docker Image
 ```yaml
@@ -91,7 +91,7 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/nextjs-app:latest
 This workflow automatically builds and pushes the Docker image to GHCR whenever code is pushed to the main branch.
 
-☸️ Kubernetes Deployment (Minikube)
+# ☸️ Kubernetes Deployment (Minikube)
 Start Minikube
 ```bash
 minikube start
@@ -105,7 +105,7 @@ kubectl get svc
 Access the Application
 ```bash
 minikube service nextjs-service
-🧩 Kubernetes Manifests
+# 🧩 Kubernetes Manifests
 deployment.yaml
 ```yaml
 apiVersion: apps/v1
@@ -148,12 +148,12 @@ spec:
       port: 3000
       targetPort: 3000
 
-📦 Repository & Image URLs
+# 📦 Repository & Image URLs
 
 GitHub Repository: https://github.com/Subhakar32/devops-assessment
 
 GHCR Image URL: ghcr.io/subhakar32/nextjs-app:latest
-🧮 Evaluation Focus
+# 🧮 Evaluation Focus
 | Area                 | Description                                          |
 | -------------------- | ---------------------------------------------------- |
 | 🐳 **Docker**        | Multi-stage, optimized image builds                  |
